@@ -3,26 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - AppLostis</title>
+    <title>Accueil - AppLostis</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>AppLostis</h1>
+        <h1>Bienvenue sur AppLostis !</h1>
+        <p>Gérez vos bennes en toute simplicité.</p>
         
-        <section id="auth-section">
-            <h2>Connexion / Inscription</h2>
-            <form id="auth-form">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Mot de passe" required>
-                <div style="display: flex; gap: 1em;">
-                    <button type="submit" id="login-btn">Se connecter</button>
-                    <button type="button" id="signup-btn">S'inscrire</button>
-                </div>
-            </form>
-        </section>
+        <a href="dashboard.html">Accéder au tableau de bord</a>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>

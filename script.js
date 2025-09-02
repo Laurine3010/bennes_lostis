@@ -1,12 +1,6 @@
 // Configuration de Supabase
 const SUPABASE_URL = 'https://zisovayurzyrkpmzqcul.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppc292YXl1cnp5cmtwbXpxY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4MzExNTUsImV4cCI6MjA3MDQwNzE1NX0.IS40LYSsLzaL-It1ypRZsvgrifb5vhxMsin5y5nnstk';
-
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Fonctions pour les pages (à ajouter au fur et à mesure...)// Configuration de Supabase
-const SUPABASE_URL = 'https://zisovayurzyrkpmzqcul.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppc292YXl1cnp5cmtwbXpxY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4MzExNTUsImV4cCI6MjA3MDQwNzE1NX0.IS40LYSsLzaL-It1ypRZsvgrifb5vhxMsin5y5nnstk';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppc292YXl1cnp5cmtwbXpxY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNzkwMTAsImV4cCI6MjA1OTk1NTAxMH0.1x7oX2Bf-3_k6Y15e7p5z-1e-p3w-7w_c9x-1_d3f1w';
 
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -17,6 +11,7 @@ async function fetchDailyAlerts() {
     const today = new Date().toISOString().split('T')[0];
     const alertsContainer = document.getElementById('alerts-container');
 
+    // Récupération des mouvements prévus pour aujourd'hui
     const { data: mouvements, error } = await supabase
         .from('mouvements')
         .select(`
@@ -33,7 +28,7 @@ async function fetchDailyAlerts() {
         return;
     }
 
-    alertsContainer.innerHTML = ''; // Nettoyer le conteneur
+    alertsContainer.innerHTML = '';
 
     if (mouvements.length === 0) {
         alertsContainer.innerHTML = '<p>🎉 Aucune alerte de benne prévue pour aujourd\'hui.</p>';
@@ -61,7 +56,7 @@ async function fetchDailyAlerts() {
 // ---------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Vérifier si nous sommes sur la page du tableau de bord
+    // Vérifier si nous sommes sur la page du tableau de bord pour lancer le chargement des alertes
     if (window.location.pathname.endsWith('dashboard.html')) {
         fetchDailyAlerts();
     }
