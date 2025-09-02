@@ -7,14 +7,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Connexion</h1>
-        <form id="login-form">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Mot de passe" required>
-            <button type="submit">Se connecter</button>
-        </form>
+    <div class="auth-container">
+        <h1>Connexion / Inscription</h1>
+
+        <section id="login-section">
+            <h2>Connexion</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p>Pas encore de compte ? <a href="#" id="show-signup">S'inscrire</a></p>
+        </section>
+
+        <section id="signup-section" style="display:none;">
+            <h2>Créer un compte</h2>
+            <form id="signup-form">
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+        </section>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
 </body>
