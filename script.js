@@ -10,7 +10,7 @@ async function handleAuthForm(event) {
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const isLogin = event.submitter.id === 'login-btn'; // On vérifie si le bouton cliqué est 'login'
+    const isLogin = event.submitter.id === 'login-btn';
 
     let authResponse;
     if (isLogin) {
@@ -28,26 +28,25 @@ async function handleAuthForm(event) {
             window.location.href = 'dashboard.html';
         } else {
             alert("Inscription réussie ! Veuillez vérifier votre email pour confirmer votre compte.");
-            // On peut rediriger vers une page d'attente ou la même page
         }
     }
 }
 
-// Vérifier l'état de l'utilisateur au chargement des pages
+// Fonction pour vérifier l'état de l'utilisateur (désactivée pour le moment)
+/*
 async function checkAuth() {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-        // L'utilisateur est connecté, on le redirige vers le tableau de bord
         if (window.location.pathname.endsWith('index.html')) {
             window.location.href = 'dashboard.html';
         }
     } else {
-        // L'utilisateur n'est pas connecté, on le redirige vers la page de connexion
         if (!window.location.pathname.endsWith('index.html')) {
             window.location.href = 'index.html';
         }
     }
 }
+*/
 
 // Initialisation des listeners au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
@@ -55,5 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authForm) {
         authForm.addEventListener('submit', handleAuthForm);
     }
-    checkAuth();
+    // checkAuth(); // Ligne commentée pour désactiver la redirection
 });
