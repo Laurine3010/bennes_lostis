@@ -8,11 +8,21 @@
 </head>
 <body>
     <div class="container">
+        <img src="logo.jpeg" alt="Logo Lostis Recyclage" class="logo">
         <h1>Bienvenue sur AppLostis !</h1>
         <p>Gérez vos bennes en toute simplicité.</p>
         
-        <a href="movements.html">Enregistrer un mouvement</a><br>
-        <a href="dashboard.html">Tableau de bord</a>
+        <a href="index.html">Page d'accueil</a> | <a href="movements.html">Enregistrer un mouvement</a>
+        
+        <hr>
+        
+        <section>
+            <h2>Bennes à gérer aujourd'hui</h2>
+            <div id="alerts-container">
+                <p>Chargement des alertes...</p>
+            </div>
+        </section>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

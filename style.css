@@ -1,7 +1,19 @@
+/* Définition des couleurs basées sur le logo */
+:root {
+    --primary-color: #45a049; /* Vert légèrement plus foncé pour les boutons au survol */
+    --secondary-color: #007bff; /* Bleu des liens */
+    --background-color: #f0f8ff; /* Bleu très clair pour le fond */
+    --text-color: #333;
+    --card-background: #fff;
+    --alert-color: #ffe0b2;
+    --alert-border-color: #ff9800;
+}
+
+/* Styles généraux */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,8 +21,9 @@ body {
     margin: 0;
 }
 
+/* Conteneur principal */
 .container {
-    background-color: #fff;
+    background-color: var(--card-background);
     padding: 2em;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -20,9 +33,16 @@ body {
 }
 
 h1, h2 {
-    color: #4CAF50;
+    color: var(--primary-color);
 }
 
+/* Logo */
+.logo {
+    max-width: 200px;
+    margin-bottom: 1em;
+}
+
+/* Formulaires et boutons */
 form {
     display: flex;
     flex-direction: column;
@@ -37,7 +57,7 @@ input, button, select {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     cursor: pointer;
@@ -45,18 +65,29 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--secondary-color);
 }
 
+/* Liens */
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Conteneur des alertes */
 #alerts-container {
     margin-top: 1.5em;
     text-align: left;
 }
 
 .alert-item {
-    background-color: #ffe0b2;
+    background-color: var(--alert-color);
     padding: 1em;
-    border-left: 5px solid #ff9800;
+    border-left: 5px solid var(--alert-border-color);
     margin-bottom: 1em;
     border-radius: 4px;
 }

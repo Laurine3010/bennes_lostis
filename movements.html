@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enregistrer un mouvement - AppLostis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Enregistrer un mouvement</h1>
+        
+        <form id="movement-form">
+            <select id="type-mouvement" required>
+                <option value="">Sélectionner le type de mouvement</option>
+                <option value="Pose">Pose</option>
+                <option value="Retrait">Retrait</option>
+            </select>
+            
+            <input type="date" id="date-prevue" required>
+            <input type="text" id="lieu" placeholder="Lieu (client)" required>
+            
+            <select id="benne-id" required>
+                <option value="">Sélectionner une benne</option>
+                </select>
+            
+            <button type="submit">Enregistrer</button>
+        </form>
+        
+        <hr>
+        <p><a href="dashboard.html">Retour au tableau de bord</a></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -7,11 +7,11 @@ const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Fonctions principales de l'application
 // ------------------------------------
 
+// Fonction pour récupérer et afficher les alertes du jour
 async function fetchDailyAlerts() {
     const today = new Date().toISOString().split('T')[0];
     const alertsContainer = document.getElementById('alerts-container');
 
-    // Récupération des mouvements prévus pour aujourd'hui
     const { data: mouvements, error } = await supabase
         .from('mouvements')
         .select(`
@@ -52,12 +52,69 @@ async function fetchDailyAlerts() {
     });
 }
 
+// Fonction pour récupérer les bennes et remplir le select
+async function fetchBennes() {
+    const benneSelect = document.getElementById('benne-id');
+    const { data: bennes, error } = await supabase
+        .from('bennes')
+        .select('id, numero_benne')
+        .order('numero_benne', { ascending: true });
+
+    if (error) {
+        console.error('Erreur lors de la récupération des bennes:', error);
+        return;
+    }
+
+    bennes.forEach(benne => {
+        const option = document.createElement('option');
+        option.value = benne.id;
+        option.textContent = benne.numero_benne;
+        benneSelect.appendChild(option);
+    });
+}
+
+// Gérer la soumission du formulaire d'enregistrement de mouvement
+async function handleMovementForm(event) {
+    event.preventDefault();
+
+    const typeMouvement = document.getElementById('type-mouvement').value;
+    const datePrevue = document.getElementById('date-prevue').value;
+    const lieu = document.getElementById('lieu').value;
+    const benneId = document.getElementById('benne-id').value;
+
+    const { data, error } = await supabase
+        .from('mouvements')
+        .insert({
+            type_mouvement: typeMouvement,
+            date_prevue: datePrevue,
+            lieu: lieu,
+            benne_id: benneId
+        });
+
+    if (error) {
+        alert("Erreur lors de l'enregistrement du mouvement: " + error.message);
+    } else {
+        alert("Mouvement enregistré avec succès !");
+        document.getElementById('movement-form').reset();
+    }
+}
+
 // Initialisation au chargement de la page
 // ---------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Vérifier si nous sommes sur la page du tableau de bord pour lancer le chargement des alertes
-    if (window.location.pathname.endsWith('dashboard.html')) {
+    // Vérifier si nous sommes sur la page d'accueil
+    if (window.location.pathname.endsWith('index.html')) {
+        // Aucune action spécifique requise, la page d'accueil est statique
+    } 
+    // Vérifier si nous sommes sur la page du tableau de bord
+    else if (window.location.pathname.endsWith('dashboard.html')) {
         fetchDailyAlerts();
+    }
+    // Vérifier si nous sommes sur la page d'enregistrement des mouvements
+    else if (window.location.pathname.endsWith('movements.html')) {
+        fetchBennes();
+        const movementForm = document.getElementById('movement-form');
+        movementForm.addEventListener('submit', handleMovementForm);
     }
 });
