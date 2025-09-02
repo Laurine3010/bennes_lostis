@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gérer les bennes - AppLostis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <img src="logo.jpeg" alt="Logo Lostis Recyclage" class="logo">
+        <h1>Gérer les bennes</h1>
+        
+        <section>
+            <h2>Ajouter une nouvelle benne</h2>
+            <form id="add-benne-form">
+                <input type="text" id="numero_benne" placeholder="Numéro de la benne" required>
+                
+                <select id="statut" required>
+                    <option value="">Sélectionner le statut</option>
+                    <option value="En stock">En stock</option>
+                    <option value="Chez client">Chez client</option>
+                </select>
+                
+                <input type="text" id="localisation_actuelle" placeholder="Localisation actuelle" required>
+                
+                <button type="submit">Ajouter la benne</button>
+            </form>
+        </section>
+        
+        <hr>
+        
+        <section>
+            <h2>Liste des bennes</h2>
+            <table id="bennes-table">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Statut</th>
+                        <th>Localisation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+        <hr>
+        <p><a href="dashboard.html">Retour au tableau de bord</a></p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
