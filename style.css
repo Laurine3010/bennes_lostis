@@ -104,26 +104,40 @@ a:hover {
 .benne-number-group input#benne-number {
     text-align: center;
 }
-/* Styles pour la page d'accueil sophistiquée */
+/* Version alternative pour body.homepage si le filtre estompe trop les boutons */
 body.homepage {
-    background-image: url('logo.jpeg'); /* Votre logo en fond */
-    background-size: cover; /* Couvre toute la page */
-    background-position: center center; /* Centre le logo */
-    background-repeat: no-repeat; /* Évite la répétition */
-    background-attachment: fixed; /* Fixe le fond lors du défilement */
+    /* Gardez ces propriétés, mais retirez le 'filter' */
+    background-image: url('logo.jpeg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     
-    /* Effet d'estompage et de contraste pour le fond */
-    filter: brightness(0.7) grayscale(0.5); /* Diminue la luminosité et désature */
-    /* Note: 'filter' affecte tout le body, y compris les éléments enfants.
-       Si cela pose problème avec le texte, nous devrons utiliser une pseudo-classe
-       ou un div de superposition pour le fond. Pour le moment, c'est le plus simple. */
-
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    position: relative; /* Nécessaire pour le pseudo-élément */
+    z-index: 1; /* Pour s'assurer que le contenu est au-dessus */
 }
+
+body.homepage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: inherit; /* Utilise la même image de fond que le body */
+    background-size: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+    background-attachment: inherit;
+    filter: brightness(0.7) grayscale(0.5); /* Applique le filtre UNIQUEMENT au fond */
+    z-index: -1; /* Place le fond derrière le contenu */
+}
+/* Si vous utilisez cette version, supprimez le filtre du body.homepage */
 
 .main-menu {
     display: flex;
