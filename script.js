@@ -1,11 +1,39 @@
 // Configuration de Supabase
-const SUPABASE_URL = 'https://zisovayurzyrkpmzykul.supabase.co';
+const SUPABASE_URL = 'https://zisovayurzyrkpmzqcul.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppc292YXl1cnp5cmtwbXpxY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNzkwMTAsImV4cCI6MjA1OTk1NTAxMH0.1x7oX2Bf-3_k6Y15e7p5z-1e-p3w-7w_c9x-1_d3f1w';
 
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Fonctions principales de l'application
 // ------------------------------------
+
+// Fonction pour analyser le numéro de benne
+function parseBenneNumber(numero) {
+    const benneInfo = {
+        taille: 'Inconnu',
+        type_benne: 'Inconnu'
+    };
+
+    const parts = numero.toUpperCase().split('-');
+    if (parts.length === 2 && parts[0].length === 2) {
+        const firstLetter = parts[0].charAt(0);
+        const secondLetter = parts[0].charAt(1);
+
+        // Déterminer la taille
+        if (firstLetter === 'H') benneInfo.taille = '8 m3';
+        else if (firstLetter === 'D') benneInfo.taille = '10 m3';
+        else if (firstLetter === 'Q') benneInfo.taille = '15 m3';
+        else if (firstLetter === 'T') benneInfo.taille = '30 m3';
+        
+        // Déterminer le type
+        if (secondLetter === 'H') benneInfo.type_benne = 'Haute';
+        else if (secondLetter === 'B') benneInfo.type_benne = 'Basse';
+        else if (secondLetter === 'T') benneInfo.type_benne = 'Trappe';
+        else if (secondLetter === 'O') benneInfo.type_benne = 'Ouverte';
+    }
+
+    return benneInfo;
+}
 
 async function fetchDailyAlerts() {
     const today = new Date().toISOString().split('T')[0];
@@ -51,7 +79,6 @@ async function fetchDailyAlerts() {
     });
 }
 
-// Fonction pour récupérer les bennes et remplir le select
 async function fetchBennes() {
     const benneSelect = document.getElementById('benne-id');
     const { data: bennes, error } = await supabase
@@ -72,7 +99,6 @@ async function fetchBennes() {
     });
 }
 
-// Fonction pour récupérer les clients et remplir le datalist
 async function fetchClients() {
     const clientList = document.getElementById('clients');
     const { data: clients, error } = await supabase
@@ -92,7 +118,6 @@ async function fetchClients() {
     });
 }
 
-// Gérer la soumission du formulaire d'enregistrement de mouvement
 async function handleMovementForm(event) {
     event.preventDefault();
 
@@ -125,12 +150,19 @@ async function handleAddBenneForm(event) {
     const statut = document.getElementById('statut').value;
     const localisation_actuelle = document.getElementById('localisation_actuelle').value;
 
+    // Nouvelle logique pour analyser le numéro de benne
+    const benneInfo = parseBenneNumber(numero_benne);
+    const taille = benneInfo.taille;
+    const type_benne = benneInfo.type_benne;
+
     const { data, error } = await supabase
         .from('bennes')
         .insert({
             numero_benne: numero_benne,
             statut: statut,
-            localisation_actuelle: localisation_actuelle
+            localisation_actuelle: localisation_actuelle,
+            taille: taille, // Ajout de la nouvelle colonne
+            type_benne: type_benne // Ajout de la nouvelle colonne
         });
 
     if (error) {
@@ -138,7 +170,7 @@ async function handleAddBenneForm(event) {
     } else {
         alert("Benne ajoutée avec succès !");
         document.getElementById('add-benne-form').reset();
-        fetchAndDisplayBennes(); // Recharger la liste des bennes
+        fetchAndDisplayBennes();
     }
 }
 
@@ -160,6 +192,8 @@ async function fetchAndDisplayBennes() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${benne.numero_benne}</td>
+            <td>${benne.taille}</td>
+            <td>${benne.type_benne}</td>
             <td>${benne.statut}</td>
             <td>${benne.localisation_actuelle}</td>
             <td>
@@ -174,17 +208,12 @@ async function fetchAndDisplayBennes() {
 async function fetchAndDisplayClientsBennes() {
     const clientsBennesTableBody = document.querySelector('#clients-bennes-table tbody');
     
-    // Jointure pour récupérer le client et la benne
-    const { data: clients, error } = await supabase
+    const { data: bennes, error } = await supabase
         .from('bennes')
         .select(`
             numero_benne,
             statut,
-            localisation_actuelle,
-            mouvements (
-                type_mouvement,
-                lieu
-            )
+            localisation_actuelle
         `)
         .eq('statut', 'Chez client');
     
@@ -195,21 +224,35 @@ async function fetchAndDisplayClientsBennes() {
     
     clientsBennesTableBody.innerHTML = '';
 
-    clients.forEach(benne => {
+    bennes.forEach(benne => {
         const row = document.createElement('tr');
-        const mouvement = benne.mouvements[0];
-        const client = mouvement ? mouvement.lieu : 'N/A';
-        const benneNumero = benne.numero_benne;
-
         row.innerHTML = `
-            <td>${client}</td>
-            <td>${benneNumero}</td>
+            <td>${benne.localisation_actuelle}</td>
+            <td>${benne.numero_benne}</td>
         `;
         clientsBennesTableBody.appendChild(row);
     });
 }
 
-// Les fonctions editBenne et deleteBenne seront ajoutées à l'étape suivante
+function handleManageBennesPage() {
+    fetchAndDisplayBennes();
+    const addBenneForm = document.getElementById('add-benne-form');
+    addBenneForm.addEventListener('submit', handleAddBenneForm);
+
+    const statutSelect = document.getElementById('statut');
+    const localisationInput = document.getElementById('localisation_actuelle');
+
+    statutSelect.addEventListener('change', (event) => {
+        if (event.target.value === 'En stock') {
+            localisationInput.value = 'Stock';
+            localisationInput.readOnly = true;
+        } else {
+            localisationInput.value = '';
+            localisationInput.readOnly = false;
+        }
+    });
+}
+
 async function editBenne(benneId) {
     alert(`Fonctionnalité de modification de la benne ${benneId} à implémenter.`);
 }
@@ -236,9 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         movementForm.addEventListener('submit', handleMovementForm);
     }
     else if (window.location.pathname.endsWith('manage_bennes.html')) {
-        fetchAndDisplayBennes();
-        const addBenneForm = document.getElementById('add-benne-form');
-        addBenneForm.addEventListener('submit', handleAddBenneForm);
+        handleManageBennesPage();
     }
     else if (window.location.pathname.endsWith('clients_bennes.html')) {
         fetchAndDisplayClientsBennes();
