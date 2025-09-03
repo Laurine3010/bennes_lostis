@@ -18,7 +18,10 @@
             </select>
             
             <input type="date" id="date-prevue" required>
-            <input type="text" id="lieu" placeholder="Lieu (client)" required>
+
+            <input list="clients" id="lieu" placeholder="Lieu (client)" required>
+            <datalist id="clients">
+                </datalist>
             
             <select id="benne-id" required>
                 <option value="">Sélectionner une benne</option>

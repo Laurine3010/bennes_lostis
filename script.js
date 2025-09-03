@@ -51,6 +51,7 @@ async function fetchDailyAlerts() {
     });
 }
 
+// Fonction pour récupérer les bennes et remplir le select
 async function fetchBennes() {
     const benneSelect = document.getElementById('benne-id');
     const { data: bennes, error } = await supabase
@@ -71,31 +72,27 @@ async function fetchBennes() {
     });
 }
 
-async function fetchAndDisplayBennes() {
-    const bennesTableBody = document.querySelector('#bennes-table tbody');
-    const { data: bennes, error } = await supabase
-        .from('bennes')
-        .select('*')
-        .order('numero_benne', { ascending: true });
-    
+// Fonction pour récupérer les clients et remplir le datalist
+async function fetchClients() {
+    const clientList = document.getElementById('clients');
+    const { data: clients, error } = await supabase
+        .from('clients')
+        .select('nom_client')
+        .order('nom_client', { ascending: true });
+
     if (error) {
-        console.error('Erreur lors de la récupération des bennes:', error);
+        console.error('Erreur lors de la récupération des clients:', error);
         return;
     }
 
-    bennesTableBody.innerHTML = ''; // Nettoyer le tableau
-
-    bennes.forEach(benne => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${benne.numero_benne}</td>
-            <td>${benne.statut}</td>
-            <td>${benne.localisation_actuelle}</td>
-        `;
-        bennesTableBody.appendChild(row);
+    clients.forEach(client => {
+        const option = document.createElement('option');
+        option.value = client.nom_client;
+        clientList.appendChild(option);
     });
 }
 
+// Gérer la soumission du formulaire d'enregistrement de mouvement
 async function handleMovementForm(event) {
     event.preventDefault();
 
@@ -121,6 +118,31 @@ async function handleMovementForm(event) {
     }
 }
 
+async function fetchAndDisplayBennes() {
+    const bennesTableBody = document.querySelector('#bennes-table tbody');
+    const { data: bennes, error } = await supabase
+        .from('bennes')
+        .select('*')
+        .order('numero_benne', { ascending: true });
+    
+    if (error) {
+        console.error('Erreur lors de la récupération des bennes:', error);
+        return;
+    }
+
+    bennesTableBody.innerHTML = '';
+
+    bennes.forEach(benne => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${benne.numero_benne}</td>
+            <td>${benne.statut}</td>
+            <td>${benne.localisation_actuelle}</td>
+        `;
+        bennesTableBody.appendChild(row);
+    });
+}
+
 async function handleAddBenneForm(event) {
     event.preventDefault();
 
@@ -141,7 +163,7 @@ async function handleAddBenneForm(event) {
     } else {
         alert("Benne ajoutée avec succès !");
         document.getElementById('add-benne-form').reset();
-        fetchAndDisplayBennes(); // Recharger la liste des bennes
+        fetchAndDisplayBennes();
     }
 }
 
@@ -157,11 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else if (window.location.pathname.endsWith('movements.html')) {
         fetchBennes();
+        fetchClients();
         const movementForm = document.getElementById('movement-form');
         movementForm.addEventListener('submit', handleMovementForm);
     }
     else if (window.location.pathname.endsWith('manage_bennes.html')) {
-        fetchAndDisplayBennes(); // Afficher les bennes au chargement
+        fetchAndDisplayBennes();
         const addBenneForm = document.getElementById('add-benne-form');
         addBenneForm.addEventListener('submit', handleAddBenneForm);
     }
