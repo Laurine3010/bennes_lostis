@@ -91,3 +91,16 @@ a:hover {
     margin-bottom: 1em;
     border-radius: 4px;
 }
+.benne-number-group {
+    display: flex;
+    gap: 0.5em;
+}
+
+.benne-number-group select,
+.benne-number-group input {
+    flex: 1;
+}
+
+.benne-number-group input#benne-number {
+    text-align: center;
+}

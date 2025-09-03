@@ -7,34 +7,6 @@ const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Fonctions principales de l'application
 // ------------------------------------
 
-// Fonction pour analyser le numéro de benne
-function parseBenneNumber(numero) {
-    const benneInfo = {
-        taille: 'Inconnu',
-        type_benne: 'Inconnu'
-    };
-
-    const parts = numero.toUpperCase().split('-');
-    if (parts.length === 2 && parts[0].length === 2) {
-        const firstLetter = parts[0].charAt(0);
-        const secondLetter = parts[0].charAt(1);
-
-        // Déterminer la taille
-        if (firstLetter === 'H') benneInfo.taille = '8 m3';
-        else if (firstLetter === 'D') benneInfo.taille = '10 m3';
-        else if (firstLetter === 'Q') benneInfo.taille = '15 m3';
-        else if (firstLetter === 'T') benneInfo.taille = '30 m3';
-        
-        // Déterminer le type
-        if (secondLetter === 'H') benneInfo.type_benne = 'Haute';
-        else if (secondLetter === 'B') benneInfo.type_benne = 'Basse';
-        else if (secondLetter === 'T') benneInfo.type_benne = 'Trappe';
-        else if (secondLetter === 'O') benneInfo.type_benne = 'Ouverte';
-    }
-
-    return benneInfo;
-}
-
 async function fetchDailyAlerts() {
     const today = new Date().toISOString().split('T')[0];
     const alertsContainer = document.getElementById('alerts-container');
@@ -146,14 +118,16 @@ async function handleMovementForm(event) {
 async function handleAddBenneForm(event) {
     event.preventDefault();
 
-    const numero_benne = document.getElementById('numero_benne').value;
+    const sizeCode = document.getElementById('size-code').value;
+    const typeCode = document.getElementById('type-code').value;
+    const benneNumber = document.getElementById('benne-number').value.padStart(3, '0');
+    
+    const numero_benne = `${sizeCode}${typeCode}-${benneNumber}`;
+    const taille = document.getElementById('size-code').options[document.getElementById('size-code').selectedIndex].text.split(' ')[0];
+    const type_benne = document.getElementById('type-code').options[document.getElementById('type-code').selectedIndex].text.split(' ')[0];
+    
     const statut = document.getElementById('statut').value;
     const localisation_actuelle = document.getElementById('localisation_actuelle').value;
-
-    // Nouvelle logique pour analyser le numéro de benne
-    const benneInfo = parseBenneNumber(numero_benne);
-    const taille = benneInfo.taille;
-    const type_benne = benneInfo.type_benne;
 
     const { data, error } = await supabase
         .from('bennes')
@@ -161,8 +135,8 @@ async function handleAddBenneForm(event) {
             numero_benne: numero_benne,
             statut: statut,
             localisation_actuelle: localisation_actuelle,
-            taille: taille, // Ajout de la nouvelle colonne
-            type_benne: type_benne // Ajout de la nouvelle colonne
+            taille: taille,
+            type_benne: type_benne
         });
 
     if (error) {

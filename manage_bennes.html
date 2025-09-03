@@ -14,7 +14,25 @@
         <section>
             <h2>Ajouter une nouvelle benne</h2>
             <form id="add-benne-form">
-                <input type="text" id="numero_benne" placeholder="Numéro de la benne (ex: HH-001)" required>
+                <div class="benne-number-group">
+                    <select id="size-code" required>
+                        <option value="">Taille</option>
+                        <option value="H">8 m3 (H)</option>
+                        <option value="D">10 m3 (D)</option>
+                        <option value="Q">15 m3 (Q)</option>
+                        <option value="T">30 m3 (T)</option>
+                    </select>
+
+                    <select id="type-code" required>
+                        <option value="">Type</option>
+                        <option value="H">Haute (H)</option>
+                        <option value="B">Basse (B)</option>
+                        <option value="T">Trappe (T)</option>
+                        <option value="O">Ouverte (O)</option>
+                    </select>
+
+                    <input type="text" id="benne-number" placeholder="001" pattern="\d{3}" maxlength="3" required>
+                </div>
                 
                 <select id="statut" required>
                     <option value="">Sélectionner le statut</option>
