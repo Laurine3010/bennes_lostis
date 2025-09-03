@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="container">
-        <img src="logo.jpeg" alt="Logo Lostis Recyclage" class="logo">
         <h1>Gérer les bennes</h1>
         
         <section>
             <h2>Ajouter une nouvelle benne</h2>
+            <div id="status-message" class="message"></div>
             <form id="add-benne-form">
                 <div class="benne-number-group">
                     <select id="size-code" required>
@@ -40,8 +40,9 @@
                     <option value="Chez client">Chez client</option>
                 </select>
                 
-                <input type="text" id="localisation_actuelle" placeholder="Localisation actuelle" required>
-                
+                <input type="text" id="localisation-input" placeholder="Localisation actuelle" required>
+                <datalist id="clients-list"></datalist>
+
                 <button type="submit">Ajouter la benne</button>
             </form>
         </section>
@@ -57,7 +58,7 @@
                         <th>Taille</th>
                         <th>Type</th>
                         <th>Statut</th>
-                        <th>Localisation</th>
+                        <th>Dernier Mouvement</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

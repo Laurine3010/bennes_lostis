@@ -4,6 +4,17 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Fonctions utilitaires
+function showStatusMessage(message, isSuccess) {
+    const statusMessageDiv = document.getElementById('status-message');
+    statusMessageDiv.textContent = message;
+    statusMessageDiv.className = isSuccess ? 'message success-message' : 'message error-message';
+    statusMessageDiv.style.display = 'block';
+    setTimeout(() => {
+        statusMessageDiv.style.display = 'none';
+    }, 5000); // Le message disparaît après 5 secondes
+}
+
 // Fonctions principales de l'application
 // ------------------------------------
 
@@ -72,7 +83,7 @@ async function fetchBennes() {
 }
 
 async function fetchClients() {
-    const clientList = document.getElementById('clients');
+    const clientList = document.getElementById('clients-list');
     const { data: clients, error } = await supabase
         .from('clients')
         .select('nom_client')
@@ -83,6 +94,7 @@ async function fetchClients() {
         return;
     }
 
+    clientList.innerHTML = '';
     clients.forEach(client => {
         const option = document.createElement('option');
         option.value = client.nom_client;
@@ -127,7 +139,7 @@ async function handleAddBenneForm(event) {
     const type_benne = document.getElementById('type-code').options[document.getElementById('type-code').selectedIndex].text.split(' ')[0];
     
     const statut = document.getElementById('statut').value;
-    const localisation_actuelle = document.getElementById('localisation_actuelle').value;
+    const localisation_actuelle = document.getElementById('localisation-input').value;
 
     const { data, error } = await supabase
         .from('bennes')
@@ -140,16 +152,18 @@ async function handleAddBenneForm(event) {
         });
 
     if (error) {
-        alert("Erreur lors de l'ajout de la benne: " + error.message);
-    } else {
-        alert("Benne ajoutée avec succès !");
+        showStatusMessage("Benne ajoutée avec succès !", true);
         document.getElementById('add-benne-form').reset();
-        fetchAndDisplayBennes(); // Ajout de cet appel pour recharger la liste
+        fetchAndDisplayBennes();
+    } else {
+        showStatusMessage("Erreur lors de l'ajout de la benne: " + error.message, false);
     }
 }
 
 async function fetchAndDisplayBennes() {
     const bennesTableBody = document.querySelector('#bennes-table tbody');
+    bennesTableBody.innerHTML = '<tr><td colspan="6">Chargement des bennes...</td></tr>';
+
     const { data: bennes, error } = await supabase
         .from('bennes')
         .select('*')
@@ -157,55 +171,40 @@ async function fetchAndDisplayBennes() {
     
     if (error) {
         console.error('Erreur lors de la récupération des bennes:', error);
+        bennesTableBody.innerHTML = '<tr><td colspan="6">Erreur lors du chargement des bennes.</td></tr>';
         return;
     }
 
     bennesTableBody.innerHTML = '';
+    
+    for (const benne of bennes) {
+        const { data: dernierMouvement, error: mouvementError } = await supabase
+            .from('mouvements')
+            .select('*')
+            .eq('benne_id', benne.id)
+            .order('date_prevue', { ascending: false })
+            .limit(1)
+            .single();
 
-    bennes.forEach(benne => {
+        let mouvementInfo = "Aucun mouvement";
+        if (dernierMouvement) {
+            mouvementInfo = `${dernierMouvement.type_mouvement} le ${dernierMouvement.date_prevue} chez ${dernierMouvement.lieu}`;
+        }
+        
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${benne.numero_benne}</td>
             <td>${benne.taille}</td>
             <td>${benne.type_benne}</td>
             <td>${benne.statut}</td>
-            <td>${benne.localisation_actuelle}</td>
+            <td>${mouvementInfo}</td>
             <td>
                 <button onclick="editBenne('${benne.id}')">Modifier</button>
                 <button onclick="deleteBenne('${benne.id}')">Supprimer</button>
             </td>
         `;
         bennesTableBody.appendChild(row);
-    });
-}
-
-async function fetchAndDisplayClientsBennes() {
-    const clientsBennesTableBody = document.querySelector('#clients-bennes-table tbody');
-    
-    const { data: bennes, error } = await supabase
-        .from('bennes')
-        .select(`
-            numero_benne,
-            statut,
-            localisation_actuelle
-        `)
-        .eq('statut', 'Chez client');
-    
-    if (error) {
-        console.error('Erreur lors de la récupération des clients et bennes:', error);
-        return;
     }
-    
-    clientsBennesTableBody.innerHTML = '';
-
-    bennes.forEach(benne => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${benne.localisation_actuelle}</td>
-            <td>${benne.numero_benne}</td>
-        `;
-        clientsBennesTableBody.appendChild(row);
-    });
 }
 
 function handleManageBennesPage() {
@@ -214,15 +213,19 @@ function handleManageBennesPage() {
     addBenneForm.addEventListener('submit', handleAddBenneForm);
 
     const statutSelect = document.getElementById('statut');
-    const localisationInput = document.getElementById('localisation_actuelle');
+    const localisationInput = document.getElementById('localisation-input');
+
+    fetchClients();
 
     statutSelect.addEventListener('change', (event) => {
         if (event.target.value === 'En stock') {
             localisationInput.value = 'Stock';
             localisationInput.readOnly = true;
+            localisationInput.removeAttribute('list');
         } else {
             localisationInput.value = '';
             localisationInput.readOnly = false;
+            localisationInput.setAttribute('list', 'clients-list');
         }
     });
 }
