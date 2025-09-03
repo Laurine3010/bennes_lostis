@@ -144,7 +144,7 @@ async function handleAddBenneForm(event) {
     } else {
         alert("Benne ajoutée avec succès !");
         document.getElementById('add-benne-form').reset();
-        fetchAndDisplayBennes();
+        fetchAndDisplayBennes(); // Ajout de cet appel pour recharger la liste
     }
 }
 
