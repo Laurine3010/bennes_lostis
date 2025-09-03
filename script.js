@@ -1,5 +1,5 @@
 // Configuration de Supabase
-const SUPABASE_URL = 'https://zisovayurzyrkpmzqcul.supabase.co';
+const SUPABASE_URL = 'https://zisovayurzyrkpmzykul.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inppc292YXl1cnp5cmtwbXpxY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNzkwMTAsImV4cCI6MjA1OTk1NTAxMH0.1x7oX2Bf-3_k6Y15e7p5z-1e-p3w-7w_c9x-1_d3f1w';
 
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -51,6 +51,7 @@ async function fetchDailyAlerts() {
     });
 }
 
+// Fonction pour récupérer les bennes et remplir le select
 async function fetchBennes() {
     const benneSelect = document.getElementById('benne-id');
     const { data: bennes, error } = await supabase
@@ -71,6 +72,7 @@ async function fetchBennes() {
     });
 }
 
+// Fonction pour récupérer les clients et remplir le datalist
 async function fetchClients() {
     const clientList = document.getElementById('clients');
     const { data: clients, error } = await supabase
@@ -90,6 +92,7 @@ async function fetchClients() {
     });
 }
 
+// Gérer la soumission du formulaire d'enregistrement de mouvement
 async function handleMovementForm(event) {
     event.preventDefault();
 
@@ -151,7 +154,7 @@ async function fetchAndDisplayBennes() {
         return;
     }
 
-    bennesTableBody.innerHTML = ''; // Nettoyer le tableau
+    bennesTableBody.innerHTML = '';
 
     bennes.forEach(benne => {
         const row = document.createElement('tr');
@@ -165,6 +168,44 @@ async function fetchAndDisplayBennes() {
             </td>
         `;
         bennesTableBody.appendChild(row);
+    });
+}
+
+async function fetchAndDisplayClientsBennes() {
+    const clientsBennesTableBody = document.querySelector('#clients-bennes-table tbody');
+    
+    // Jointure pour récupérer le client et la benne
+    const { data: clients, error } = await supabase
+        .from('bennes')
+        .select(`
+            numero_benne,
+            statut,
+            localisation_actuelle,
+            mouvements (
+                type_mouvement,
+                lieu
+            )
+        `)
+        .eq('statut', 'Chez client');
+    
+    if (error) {
+        console.error('Erreur lors de la récupération des clients et bennes:', error);
+        return;
+    }
+    
+    clientsBennesTableBody.innerHTML = '';
+
+    clients.forEach(benne => {
+        const row = document.createElement('tr');
+        const mouvement = benne.mouvements[0];
+        const client = mouvement ? mouvement.lieu : 'N/A';
+        const benneNumero = benne.numero_benne;
+
+        row.innerHTML = `
+            <td>${client}</td>
+            <td>${benneNumero}</td>
+        `;
+        clientsBennesTableBody.appendChild(row);
     });
 }
 
@@ -198,5 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchAndDisplayBennes();
         const addBenneForm = document.getElementById('add-benne-form');
         addBenneForm.addEventListener('submit', handleAddBenneForm);
+    }
+    else if (window.location.pathname.endsWith('clients_bennes.html')) {
+        fetchAndDisplayClientsBennes();
     }
 });
