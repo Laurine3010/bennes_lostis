@@ -94,7 +94,7 @@ async function fetchClients() {
         return;
     }
 
-    clientList.innerHTML = '';
+    clientList.innerHTML = ''; // Vide la liste avant de la remplir
     clients.forEach(client => {
         const option = document.createElement('option');
         option.value = client.nom_client;
@@ -152,11 +152,11 @@ async function handleAddBenneForm(event) {
         });
 
     if (error) {
+        showStatusMessage("Erreur lors de l'ajout de la benne: " + error.message, false);
+    } else {
         showStatusMessage("Benne ajoutée avec succès !", true);
         document.getElementById('add-benne-form').reset();
         fetchAndDisplayBennes();
-    } else {
-        showStatusMessage("Erreur lors de l'ajout de la benne: " + error.message, false);
     }
 }
 
