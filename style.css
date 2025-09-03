@@ -1,59 +1,67 @@
-/* Définition des couleurs basées sur le logo */
+/* Définition des couleurs et polices */
 :root {
-    --primary-color: #45a049; /* Vert légèrement plus foncé pour les boutons au survol */
-    --secondary-color: #007bff; /* Bleu des liens */
-    --background-color: #f0f8ff; /* Bleu très clair pour le fond */
+    --primary-color: #45a049; /* Vert pour les éléments clés */
+    --secondary-color: #007bff; /* Bleu pour les accents */
+    --background-color: #f0f8ff; /* Bleu très clair */
     --text-color: #333;
     --card-background: #fff;
     --alert-color: #ffe0b2;
     --alert-border-color: #ff9800;
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Styles généraux */
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     background-color: var(--background-color);
     color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
 }
 
-/* Conteneur principal */
+/* Conteneur principal pour les pages d'application */
 .container {
     background-color: var(--card-background);
-    padding: 2em;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2.5em;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 500px;
-    text-align: center;
+    max-width: 600px;
+    text-align: left;
 }
 
 h1, h2 {
     color: var(--primary-color);
+    text-align: center;
+    margin-top: 0;
 }
 
 /* Logo */
 .logo {
-    max-width: 200px;
-    margin-bottom: 1em;
+    display: block;
+    max-width: 150px;
+    margin: 0 auto 2em;
 }
 
 /* Formulaires et boutons */
 form {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 1.2em;
 }
 
 input, button, select {
-    padding: 0.8em;
-    border-radius: 4px;
+    padding: 1em;
+    border-radius: 6px;
     border: 1px solid #ddd;
     font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 button {
@@ -62,6 +70,7 @@ button {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-weight: bold;
 }
 
 button:hover {
@@ -72,16 +81,20 @@ button:hover {
 a {
     color: var(--secondary-color);
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 a:hover {
+    color: var(--primary-color);
     text-decoration: underline;
 }
 
 /* Conteneur des alertes */
 #alerts-container {
-    margin-top: 1.5em;
-    text-align: left;
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #f8f8f8;
+    border-radius: 8px;
 }
 
 .alert-item {
@@ -91,6 +104,78 @@ a:hover {
     margin-bottom: 1em;
     border-radius: 4px;
 }
+
+/* Styles pour la page d'accueil */
+body.homepage {
+    background-image: none;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    padding: 2.5em;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.main-menu .logo {
+    max-width: 180px;
+    margin-bottom: 2em;
+}
+
+.menu-button {
+    display: block;
+    padding: 1.2em 2em;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour le tableau des bennes */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5em;
+}
+
+th, td {
+    padding: 1em;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Groupement des champs de numéro de benne */
 .benne-number-group {
     display: flex;
     gap: 0.5em;
@@ -104,70 +189,3 @@ a:hover {
 .benne-number-group input#benne-number {
     text-align: center;
 }
-/* Version alternative pour body.homepage si le filtre estompe trop les boutons */
-body.homepage {
-    /* Gardez ces propriétés, mais retirez le 'filter' */
-    background-image: url('logo.jpeg');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    position: relative; /* Nécessaire pour le pseudo-élément */
-    z-index: 1; /* Pour s'assurer que le contenu est au-dessus */
-}
-
-body.homepage::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: inherit; /* Utilise la même image de fond que le body */
-    background-size: inherit;
-    background-position: inherit;
-    background-repeat: inherit;
-    background-attachment: inherit;
-    filter: brightness(0.7) grayscale(0.5); /* Applique le filtre UNIQUEMENT au fond */
-    z-index: -1; /* Place le fond derrière le contenu */
-}
-/* Si vous utilisez cette version, supprimez le filtre du body.homepage */
-
-.main-menu {
-    display: flex;
-    flex-direction: column; /* Boutons empilés verticalement */
-    gap: 1.5em; /* Espacement entre les boutons */
-    padding: 2em;
-    background-color: rgba(255, 255, 255, 0.85); /* Fond semi-transparent pour la lisibilité */
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-}
-
-.menu-button {
-    display: block; /* Pour que toute la zone soit cliquable */
-    padding: 1.2em 2em;
-    background-color: var(--primary-color); /* Utilise votre couleur primaire */
-    color: white;
-    text-decoration: none;
-    border-radius: 50px; /* Boutons plus arrondis */
-    font-size: 1.2em;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.menu-button:hover {
-    background-color: var(--secondary-color); /* Couleur secondaire au survol */
-    transform: translateY(-2px); /* Petit effet de soulèvement */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-
