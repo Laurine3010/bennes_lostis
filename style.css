@@ -104,3 +104,56 @@ a:hover {
 .benne-number-group input#benne-number {
     text-align: center;
 }
+/* Styles pour la page d'accueil sophistiquée */
+body.homepage {
+    background-image: url('logo.jpeg'); /* Votre logo en fond */
+    background-size: cover; /* Couvre toute la page */
+    background-position: center center; /* Centre le logo */
+    background-repeat: no-repeat; /* Évite la répétition */
+    background-attachment: fixed; /* Fixe le fond lors du défilement */
+    
+    /* Effet d'estompage et de contraste pour le fond */
+    filter: brightness(0.7) grayscale(0.5); /* Diminue la luminosité et désature */
+    /* Note: 'filter' affecte tout le body, y compris les éléments enfants.
+       Si cela pose problème avec le texte, nous devrons utiliser une pseudo-classe
+       ou un div de superposition pour le fond. Pour le moment, c'est le plus simple. */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.main-menu {
+    display: flex;
+    flex-direction: column; /* Boutons empilés verticalement */
+    gap: 1.5em; /* Espacement entre les boutons */
+    padding: 2em;
+    background-color: rgba(255, 255, 255, 0.85); /* Fond semi-transparent pour la lisibilité */
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.menu-button {
+    display: block; /* Pour que toute la zone soit cliquable */
+    padding: 1.2em 2em;
+    background-color: var(--primary-color); /* Utilise votre couleur primaire */
+    color: white;
+    text-decoration: none;
+    border-radius: 50px; /* Boutons plus arrondis */
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-button:hover {
+    background-color: var(--secondary-color); /* Couleur secondaire au survol */
+    transform: translateY(-2px); /* Petit effet de soulèvement */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
